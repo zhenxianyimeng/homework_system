@@ -1,0 +1,124 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>在线作业管理系统教师端</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+<el-container style="height: 100%; border: 1px solid #eee">
+    <el-header>
+        <el-row>
+            <el-col :span="6">
+                <div style="margin-top:  16px; margin-right:  10px;">
+                    <img src="../img/notebook.png"
+                         alt="作业管理系统" title="作业管理系统" class="logo-note" />
+                </div>
+            </el-col>
+            <el-col :span="16">
+                <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                    <el-submenu index="1">
+                        <template slot="title">作业管理</template>
+                        <el-menu-item index="1-1">作业列表</el-menu-item>
+                        <el-menu-item index="1-2">新增作业</el-menu-item>
+                    </el-submenu>
+                </el-menu>
+            </el-col>
+            <el-col :span="2">
+                <div style="margin-top:  16px; margin-right:  10px;">
+                    <el-button type="danger" @click="loginOut">登出</el-button>
+                </div>
+            </el-col>
+        </el-row>
+    </el-header>
+    <el-main>
+        <iframe id="detail"
+                     name="detail"
+                     style="margin:0;padding:0;height:100%;width:100%;right:0px;border:solid 0px red;">
+                     <!--src="chart.html"-->
+        </iframe>
+    </el-main>
+</el-container>
+</div>
+<style>
+    .logo-note{
+        height: 47px;
+        width: 50px;
+    }
+
+    #app{
+        height: 100%;
+    }
+    body > .el-container {
+        margin-bottom: 40px;
+        height: 100%;
+    }
+
+    html,body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+    }/*这里是关键*/
+</style>
+</body>
+<!-- import Vue before Element -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+<script>
+//     function check() {
+//         $.ajax({
+//             type: 'GET',
+//             url: "/news/checkToken",
+// //            data: vm.condition,
+//             contentType:"application/x-www-form-urlencoded",
+//             success: function(data){
+//             },
+//             error : function(xhr,textStatus,errorThrown){
+//                 if (xhr.status == 401) {
+//                     top.location.href = '/pages/login.html';
+//                 }
+//             },
+//             dataType: "json"
+//         });
+//     }
+
+    new Vue({
+        el: '#app',
+        data: function() {
+            return { activeIndex: '1-1' }
+        },
+        mounted: function () {
+            // check();
+        },
+        methods: {
+            loginOut: function(){
+                $.ajax({
+                    type: 'GET',
+                    url: "/user/loginOut",
+                    contentType:"application/x-www-form-urlencoded",
+                    success: function(data){
+                        top.location.href = '/pages/login.html';
+                    },
+                    error : function(xhr,textStatus,errorThrown){
+                        if (xhr.status == 401) {
+                            top.location.href = '/pages/login.html';
+                        }
+                    },
+                    dataType: "json"
+                });
+            },
+            handleSelect:function(idx){
+                if (idx == "1-1") {
+                    $("#detail").attr("src","subject_list.html");
+                } else if (idx == '1-2') {
+                    $("#detail").attr("src","ask_add.html");
+                }
+            }
+        }
+    })
+</script>
+</html>
