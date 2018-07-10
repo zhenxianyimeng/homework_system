@@ -10,12 +10,12 @@
 <div id="app">
     <el-upload
             class="upload-demo"
-            action="/ask/uploader"
+            action="/teacher/ask/uploader"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
             :before-remove="beforeRemove"
             multiple
-            :limit="3"
+            :limit="1"
             :on-exceed="handleExceed"
             :file-list="fileList">
         <el-button size="small" type="primary">点击上传</el-button>
@@ -33,7 +33,7 @@
         el: '#app',
         data: function() {
             return {
-                fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
+                fileList: []
             };
         },
         mounted: function () {
@@ -43,10 +43,10 @@
                 console.log(file, fileList);
             },
             handlePreview(file) {
-                console.log(file);
+                console.log("preview");
             },
             handleExceed(files, fileList) {
-                this.$message.warning('当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件');
+                this.$message.warning('当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件');
             },
             beforeRemove(file, fileList) {
                 return this.$confirm('确定移除 ' + file.name +' ？');

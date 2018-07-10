@@ -17,6 +17,10 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
+    public void saveStudent(Student student){
+        studentRepository.save(student);
+    }
+
     public Student findByNameAndPwd(String name, String password){
         return studentRepository.findFirstByNameEqualsAndPasswordEquals(name, password);
     }

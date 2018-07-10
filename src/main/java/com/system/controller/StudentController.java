@@ -43,6 +43,7 @@ public class StudentController {
                 String pwd = name + password + System.currentTimeMillis();
                 String md = Hashing.md5().newHasher().putString(pwd, Charsets.UTF_8).hash().toString();
                 student.setToken(md);
+                studentService.saveStudent(student);
                 Cookie cookie = new Cookie(StudentLogInterceptor.TOKEN_NAME, md);//创建新cookie
                 cookie.setMaxAge(12 * 3600);
                 cookie.setPath("/");
