@@ -30,7 +30,7 @@ public class TeacherController {
     @Autowired
     TeacherService teacherService;
 
-    public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"upload";
+    public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"upload/";
 
     @PostMapping("/user/teacher/login")
     @ResponseBody
