@@ -1,6 +1,6 @@
 package com.system.interceptor;
 
-import com.system.common.service.StudentService;
+import com.system.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;

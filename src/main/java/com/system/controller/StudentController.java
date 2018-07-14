@@ -2,12 +2,9 @@ package com.system.controller;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
-import com.system.common.service.StudentService;
-import com.system.common.service.TeacherService;
+import com.system.service.StudentService;
 import com.system.entity.Student;
-import com.system.entity.Teacher;
 import com.system.interceptor.StudentLogInterceptor;
-import com.system.interceptor.TeacherLogInterceptor;
 import com.system.vo.request.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;

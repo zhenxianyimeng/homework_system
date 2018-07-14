@@ -2,7 +2,7 @@ package com.system.controller;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
-import com.system.common.service.TeacherService;
+import com.system.service.TeacherService;
 import com.system.entity.Teacher;
 import com.system.interceptor.TeacherLogInterceptor;
 import com.system.vo.request.Result;
@@ -11,7 +11,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +29,7 @@ public class TeacherController {
     @Autowired
     TeacherService teacherService;
 
-    public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"upload/";
+    public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"upload";
 
     @PostMapping("/user/teacher/login")
     @ResponseBody

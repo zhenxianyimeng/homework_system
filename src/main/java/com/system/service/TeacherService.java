@@ -1,4 +1,4 @@
-package com.system.common.service;
+package com.system.service;
 
 import com.system.entity.Teacher;
 import com.system.repository.TeacherRepository;

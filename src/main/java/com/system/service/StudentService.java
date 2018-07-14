@@ -1,9 +1,7 @@
-package com.system.common.service;
+package com.system.service;
 
 import com.system.entity.Student;
-import com.system.entity.Teacher;
 import com.system.repository.StudentRepository;
-import com.system.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
