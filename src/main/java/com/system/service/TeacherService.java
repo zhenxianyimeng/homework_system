@@ -26,4 +26,8 @@ public class TeacherService {
     public boolean isTokenValid(String token){
         return teacherRepository.findFirstByTokenEquals(token)==null ? false : true;
     }
+
+    public Teacher findByToken(String token){
+        return teacherRepository.findFirstByTokenEquals(token);
+    }
 }

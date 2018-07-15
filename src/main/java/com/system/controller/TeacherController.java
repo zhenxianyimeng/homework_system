@@ -2,12 +2,15 @@ package com.system.controller;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
+import com.system.common.info.LoginInfo;
+import com.system.common.info.TeacherInfo;
 import com.system.service.SelectService;
 import com.system.service.TeacherService;
 import com.system.entity.Teacher;
 import com.system.interceptor.TeacherLogInterceptor;
-import com.system.vo.request.Result;
-import com.system.vo.request.SelectVo;
+import com.system.vo.request.SelectRequest;
+import com.system.vo.response.Result;
+import com.system.vo.response.SelectVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -82,6 +85,16 @@ public class TeacherController {
         return Result.fail();
     }
 
+    @PostMapping("/teacher/ask/submit")
+    public Result submit(@RequestBody SelectRequest request){
+        try {
+            System.out.println(request);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.fail();
+    }
+
     @PostMapping("/teacher/ask/uploader")
     @ResponseBody
     public Result askUploade(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
@@ -95,6 +108,7 @@ public class TeacherController {
                 out.write(file.getBytes());
                 out.flush();
                 out.close();
+                TeacherInfo.put(LoginInfo.TEACHER_TOKEN.get(), url);
                 return Result.success(url);
             }
         } catch (Exception e) {

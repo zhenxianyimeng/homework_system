@@ -1,4 +1,4 @@
-package com.system.vo.request;
+package com.system.vo.response;
 
 import com.system.common.constant.WebConstant;
 

@@ -12,7 +12,7 @@
 
 
 
-    <el-form ref="form" :model="form" label-width="80px">
+    <el-form ref="form" :model="form" label-width="80px" class="sub-form">
         <el-form-item label="选择类型">
             <el-select v-model="type_value" placeholder="类型">
                 <el-option
@@ -86,7 +86,12 @@
         </el-form-item>
     </el-form>
 </div>
-
+<style>
+    .sub-form {
+        width: 500px;
+        margin: auto;
+    }
+</style>
 </body>
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
@@ -132,20 +137,27 @@
 
     function submitFile(vm) {
         $.ajax({
-            type: 'GET',
-            url: "/teacher/ask/select_info",
-            sync:false,
+            type: 'POST',
+            url: "/teacher/ask/submit",
+            data: JSON.stringify({
+                typeValue: vm.type_value,
+                gradeValue: vm.grade_value,
+                courseValue: vm.course_value,
+                chapterValue: vm.chapter_value,
+                sectionValue: vm.section_value
+            }),
+            contentType : 'application/json',
+            dataType:'json',
             success: function(data){
                 if(data.code = 200){
-                    vm.select_info = data.data;
+                    alert("上传题目成功")
                 }
             },
             error : function(xhr,textStatus,errorThrown){
                 if (xhr.status == 401) {
                     top.location.href = '/pages/teacher_login.html';
                 }
-            },
-            dataType: "json"
+            }
         });
     }
 
@@ -168,7 +180,7 @@
         },
         methods: {
             onSubmit(){
-
+                submitFile(this)
             },
             // beforeUpload(file) {
             //     var temp = new Date().getTime().toString().concat(file.name);

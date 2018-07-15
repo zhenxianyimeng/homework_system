@@ -1,7 +1,7 @@
 package com.system.service;
 
 import com.system.repository.*;
-import com.system.vo.request.SelectVo;
+import com.system.vo.response.SelectVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

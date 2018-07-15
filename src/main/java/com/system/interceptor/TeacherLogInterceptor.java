@@ -1,5 +1,6 @@
 package com.system.interceptor;
 
+import com.system.common.info.LoginInfo;
 import com.system.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ public class TeacherLogInterceptor implements HandlerInterceptor {
             for (Cookie cookie : cookies) {
                 if (TOKEN_NAME.equals(cookie.getName())) {
                     if (teacherService.isTokenValid(cookie.getValue())) {
+                        LoginInfo.TEACHER_TOKEN.set(cookie.getValue());
                         return true;
                     }
                 }
@@ -41,5 +43,10 @@ public class TeacherLogInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
 
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        LoginInfo.TEACHER_TOKEN.remove();
     }
 }
