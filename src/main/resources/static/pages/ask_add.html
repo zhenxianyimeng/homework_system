@@ -8,19 +8,83 @@
 </head>
 <body>
 <div id="app">
-    <el-upload
-            class="upload-demo"
-            action="/teacher/ask/uploader"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
-            multiple
-            :limit="1"
-            :on-exceed="handleExceed"
-            :file-list="fileList">
-        <el-button size="small" type="primary">点击上传</el-button>
-        <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg文件，且不超过10M</div>
-    </el-upload>
+
+
+
+
+    <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="选择类型">
+            <el-select v-model="type_value" placeholder="类型">
+                <el-option
+                        v-for="item in select_info.typeList"
+                        :key="item.id"
+                        :label="item.type"
+                        :value="item.id">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="选择年级">
+            <el-select v-model="grade_value" placeholder="年级">
+                <el-option
+                        v-for="item in select_info.gradeList"
+                        :key="item.id"
+                        :label="item.grade"
+                        :value="item.id">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="选择课程">
+            <el-select v-model="course_value" placeholder="课程">
+                <el-option
+                        v-for="item in select_info.courseList"
+                        :key="item.id"
+                        :label="item.course"
+                        :value="item.id">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="选择章">
+            <el-select v-model="chapter_value" placeholder="章">
+                <el-option
+                        v-for="item in select_info.chapterList"
+                        :key="item.id"
+                        :label="item.chapter"
+                        :value="item.id">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="选择节">
+            <el-select v-model="section_value" placeholder="节">
+                <el-option
+                        v-for="item in select_info.sectionList"
+                        :key="item.id"
+                        :label="item.section"
+                        :value="item.id">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="题目上传">
+            <el-upload
+                    class="upload-demo"
+                    action="/teacher/ask/uploader"
+                    :on-preview="handlePreview"
+                    :on-remove="handleRemove"
+                    :before-remove="beforeRemove"
+                    multiple
+                    :limit="5"
+                    :on-exceed="handleExceed"
+                    :file-list="fileList"
+                    :on-success="onSuccess">
+                <el-button size="small" type="primary">点击上传</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg文件，且不超过10M</div>
+            </el-upload>
+        </el-form-item>
+
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit">提交</el-button>
+            <el-button>取消</el-button>
+        </el-form-item>
+    </el-form>
 </div>
 
 </body>
@@ -29,27 +93,105 @@
 <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
 
 <script>
+
+    (function() {
+        $.ajax({
+            type: 'GET',
+            url: "/teacher/check_token",
+//            data: vm.condition,
+            contentType:"application/x-www-form-urlencoded",
+            success: function(data){
+            },
+            error : function(xhr,textStatus,errorThrown){
+                if (xhr.status == 401) {
+                    top.location.href = '/pages/teacher_login.html';
+                }
+            },
+            dataType: "json"
+        });
+    })();
+
+    function getSelectInfo(vm) {
+        $.ajax({
+            type: 'GET',
+            url: "/teacher/ask/select_info",
+            sync:false,
+            success: function(data){
+                if(data.code = 200){
+                    vm.select_info = data.data;
+                }
+            },
+            error : function(xhr,textStatus,errorThrown){
+                if (xhr.status == 401) {
+                    top.location.href = '/pages/teacher_login.html';
+                }
+            },
+            dataType: "json"
+        });
+    }
+
+    function submitFile(vm) {
+        $.ajax({
+            type: 'GET',
+            url: "/teacher/ask/select_info",
+            sync:false,
+            success: function(data){
+                if(data.code = 200){
+                    vm.select_info = data.data;
+                }
+            },
+            error : function(xhr,textStatus,errorThrown){
+                if (xhr.status == 401) {
+                    top.location.href = '/pages/teacher_login.html';
+                }
+            },
+            dataType: "json"
+        });
+    }
+
     new Vue({
         el: '#app',
         data: function() {
             return {
-                fileList: []
+                fileList: [],
+                select_info:{"typeList":[{"id":1, "type":"11"}]},
+                type_value:'',
+                grade_value:'',
+                course_value:'',
+                chapter_value:'',
+                section_value:'',
+                form:{}
             };
         },
         mounted: function () {
+            getSelectInfo(this)
         },
         methods: {
+            onSubmit(){
+
+            },
+            // beforeUpload(file) {
+            //     var temp = new Date().getTime().toString().concat(file.name);
+            //
+            //     // file.name = new Date().getTime().toString().concat(file.name)
+            // },
+            onSuccess(response, file, fileList){
+                if(response.code = 200){
+                    file.url = response.data.toString();
+                }
+            },
             handleRemove(file, fileList) {
                 console.log(file, fileList);
             },
             handlePreview(file) {
+                alert(file.name)
                 console.log("preview");
             },
             handleExceed(files, fileList) {
-                this.$message.warning('当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件');
+                this.$message.warning('当前限制选择 5 个文件，共次选择了'+ fileList.length +'个文件');
             },
             beforeRemove(file, fileList) {
-                return this.$confirm('确定移除 ' + file.name +' ？');
+                return this.$confirm('确定移除 ' + file.name +' ？' + file.url);
             }
         }
     })

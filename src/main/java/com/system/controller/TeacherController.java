@@ -2,10 +2,12 @@ package com.system.controller;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
+import com.system.service.SelectService;
 import com.system.service.TeacherService;
 import com.system.entity.Teacher;
 import com.system.interceptor.TeacherLogInterceptor;
 import com.system.vo.request.Result;
+import com.system.vo.request.SelectVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +31,28 @@ public class TeacherController {
     @Autowired
     TeacherService teacherService;
 
+    @Autowired
+    SelectService selectService;
+
     public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"upload";
+
+    @GetMapping("/teacher/check_token")
+    @ResponseBody
+    public Result checkToken(){
+        return Result.success();
+    }
+
+    @GetMapping("/teacher/ask/select_info")
+    @ResponseBody
+    public Result getSelectInfo(){
+        try {
+            SelectVo vo = selectService.getSelectOption();
+            return Result.success(vo);
+        }catch (Exception e){
+
+        }
+        return Result.fail();
+    }
 
     @PostMapping("/user/teacher/login")
     @ResponseBody
@@ -65,12 +88,14 @@ public class TeacherController {
         BufferedOutputStream out =  null;
         try {
             if (!file.isEmpty()) {
-                String saveFileName = file.getOriginalFilename();
-                File saveFile = new File(BASE_DIR + saveFileName);
+                String saveFileName = System.currentTimeMillis()+file.getOriginalFilename();
+                String url = BASE_DIR + saveFileName;
+                File saveFile = new File(url);
                 out = new BufferedOutputStream(new FileOutputStream(saveFile));
                 out.write(file.getBytes());
                 out.flush();
                 out.close();
+                return Result.success(url);
             }
         } catch (Exception e) {
             e.printStackTrace();

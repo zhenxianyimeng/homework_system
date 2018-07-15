@@ -29,7 +29,11 @@ public class SelectService {
 
     public SelectVo getSelectOption(){
         SelectVo selectVo = new SelectVo();
-
+        selectVo.setTypeList(typeRepository.findAll());
+        selectVo.setCourseList(courseRepository.findAll());
+        selectVo.setGradeList(gradeRepository.findAll());
+        selectVo.setChapterList(chapterRepository.findAll());
+        selectVo.setSectionList(sectionRepository.findAll());
         return selectVo;
     }
 }

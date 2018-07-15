@@ -7,4 +7,25 @@
 <body>
 
 </body>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+<script>
+    (function() {
+        $.ajax({
+            type: 'GET',
+            url: "/teacher/check_token",
+//            data: vm.condition,
+            contentType:"application/x-www-form-urlencoded",
+            success: function(data){
+            },
+            error : function(xhr,textStatus,errorThrown){
+                if (xhr.status == 401) {
+                    top.location.href = '/pages/teacher_login.html';
+                }
+            },
+            dataType: "json"
+        });
+    })();
+</script>
 </html>
