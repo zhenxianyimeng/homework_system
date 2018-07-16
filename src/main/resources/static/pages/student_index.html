@@ -117,14 +117,14 @@
             loginOut: function () {
                 $.ajax({
                     type: 'GET',
-                    url: "/user/loginOut",
+                    url: "/student/loginOut",
                     contentType: "application/x-www-form-urlencoded",
                     success: function (data) {
-                        top.location.href = '/pages/login.html';
+                        top.location.href = '/pages/student_login.html';
                     },
                     error: function (xhr, textStatus, errorThrown) {
                         if (xhr.status == 401) {
-                            top.location.href = '/pages/login.html';
+                            top.location.href = '/pages/student_login.html';
                         }
                     },
                     dataType: "json"

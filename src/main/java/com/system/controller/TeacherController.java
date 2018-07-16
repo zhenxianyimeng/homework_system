@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import com.system.common.info.LoginInfo;
 import com.system.common.info.TeacherInfo;
+import com.system.interceptor.StudentLogInterceptor;
 import com.system.service.SelectService;
 import com.system.service.TeacherService;
 import com.system.entity.Teacher;
@@ -37,7 +38,21 @@ public class TeacherController {
     @Autowired
     SelectService selectService;
 
-    public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"static/"+"upload";
+    public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"static/";
+
+    @GetMapping("/teacher/loginOut")
+    public Result getIndex(HttpServletResponse httpServletResponse) {
+        try {
+            Cookie cookie = new Cookie(TeacherLogInterceptor.TOKEN_NAME,"");//创建新cookie
+            cookie.setMaxAge(0);
+            cookie.setPath("/");
+            httpServletResponse.addCookie(cookie);
+            return Result.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail();
+    }
 
     @GetMapping("/teacher/check_token")
     @ResponseBody
@@ -114,7 +129,7 @@ public class TeacherController {
         BufferedOutputStream out =  null;
         try {
             if (!file.isEmpty()) {
-                String saveFileName = System.currentTimeMillis()+file.getOriginalFilename();
+                String saveFileName = "upload" + System.currentTimeMillis()+file.getOriginalFilename();
                 String url = BASE_DIR + saveFileName;
                 File saveFile = new File(url);
                 out = new BufferedOutputStream(new FileOutputStream(saveFile));

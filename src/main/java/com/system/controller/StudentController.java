@@ -38,8 +38,21 @@ public class StudentController {
     @Autowired
     StudentService studentService;
 
-    public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"static/"+"answer";
+    public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"static/";
 
+    @GetMapping("/student/loginOut")
+    public Result getIndex(HttpServletResponse httpServletResponse) {
+        try {
+            Cookie cookie = new Cookie(StudentLogInterceptor.TOKEN_NAME,"");//创建新cookie
+            cookie.setMaxAge(0);
+            cookie.setPath("/");
+            httpServletResponse.addCookie(cookie);
+            return Result.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail();
+    }
 
     @GetMapping("/student/check_token")
     @ResponseBody
@@ -114,7 +127,7 @@ public class StudentController {
         BufferedOutputStream out =  null;
         try {
             if (!file.isEmpty()) {
-                String saveFileName = System.currentTimeMillis()+file.getOriginalFilename();
+                String saveFileName ="answer"+ System.currentTimeMillis()+file.getOriginalFilename();
                 String url = BASE_DIR + saveFileName;
                 File saveFile = new File(url);
                 out = new BufferedOutputStream(new FileOutputStream(saveFile));
