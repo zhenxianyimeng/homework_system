@@ -74,14 +74,31 @@
     <el-dialog
             title="提示"
             :visible.sync="dialogVisible"
-            width="60%">
+            width="40%">
         <el-form ref="form" :model="question" label-width="80px">
             <el-form-item label="问题题目">
                 <el-input type="textarea" :rows="1" v-model="question.questionTitle"></el-input>
             </el-form-item>
-            <img v-bind:src="question.url" class="image"/>
+            <img v-for="url in question.urlList" v-bind:src="url" class="image"/>
+            <!--<img v-bind:src="question.url" class="image"/>-->
+            <el-form-item label="答案上传">
+                <el-upload
+                        class="upload-demo"
+                        action="/student/answer/uploader"
+                        :on-preview="handlePreview"
+                        :on-remove="handleRemove"
+                        :before-remove="beforeRemove"
+                        multiple
+                        :limit="5"
+                        :on-exceed="handleExceed"
+                        :file-list="fileList"
+                        :on-success="onSuccess">
+                    <el-button size="small" type="primary">点击上传</el-button>
+                    <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg文件，且不超过10M</div>
+                </el-upload>
+            </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="onSubmit">立即创建</el-button>
+                <el-button type="primary" @click="onSubmit">提交答案</el-button>
                 <el-button @click="dialogVisible = false">取消</el-button>
             </el-form-item>
         </el-form>
@@ -151,10 +168,30 @@
         });
     }
 
+    function submitAnswer(vm, id) {
+        $.ajax({
+            type: 'GET',
+            url: "/student/answer/submit?questionId="+id,
+            // contentType : 'application/json',
+            dataType:'json',
+            success: function(data){
+                if(data.code == 0){
+                    alert("上传答案成功")
+                }
+            },
+            error : function(xhr,textStatus,errorThrown){
+                if (xhr.status == 401) {
+                    top.location.href = '/pages/student_login.html';
+                }
+            }
+        });
+    }
+
     new Vue({
         el: '#app',
         data: function () {
             return {
+                fileList: [],
                 questionList: [
                 ],
                 question:{},
@@ -173,7 +210,25 @@
 
             },
             onSubmit : function () {
-
+                submitAnswer(this, this.question.id)
+            },
+            onSuccess(response, file, fileList){
+                if(response.code = 200){
+                    file.url = response.data.toString();
+                }
+            },
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePreview(file) {
+                alert(file.name)
+                console.log("preview");
+            },
+            handleExceed(files, fileList) {
+                this.$message.warning('当前限制选择 5 个文件，共次选择了'+ fileList.length +'个文件');
+            },
+            beforeRemove(file, fileList) {
+                return this.$confirm('确定移除 ' + file.name +' ？' + file.url);
             }
         }
     })

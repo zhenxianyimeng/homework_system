@@ -121,8 +121,8 @@ public class TeacherController {
                 out.write(file.getBytes());
                 out.flush();
                 out.close();
-                TeacherInfo.put(LoginInfo.TEACHER_TOKEN.get(), url);
-                return Result.success(url);
+                TeacherInfo.put(LoginInfo.TEACHER_TOKEN.get(), saveFileName);
+                return Result.success(saveFileName);
             }
         } catch (Exception e) {
             e.printStackTrace();

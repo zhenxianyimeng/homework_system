@@ -2,16 +2,32 @@ package com.system.controller;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
+import com.system.common.info.LoginInfo;
+import com.system.common.info.StudentInfo;
+import com.system.common.info.TeacherInfo;
+import com.system.entity.TeacherCommit;
 import com.system.service.StudentService;
 import com.system.entity.Student;
 import com.system.interceptor.StudentLogInterceptor;
+import com.system.vo.request.SelectRequest;
+import com.system.vo.response.QuestionVo;
 import com.system.vo.response.Result;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author zjb
@@ -21,6 +37,9 @@ import javax.servlet.http.HttpServletResponse;
 public class StudentController {
     @Autowired
     StudentService studentService;
+
+    public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"static/"+"answer";
+
 
     @GetMapping("/student/check_token")
     @ResponseBody
@@ -32,7 +51,15 @@ public class StudentController {
     @ResponseBody
     public Result findCommitById(@RequestParam Long id){
         try {
-            return Result.success(studentService.findCommitById(id));
+            TeacherCommit teacherCommit = studentService.findCommitById(id);
+            QuestionVo questionVo = new QuestionVo();
+            BeanUtils.copyProperties(teacherCommit, questionVo);
+            String url = teacherCommit.getUrl();
+            if(!StringUtils.isEmpty(url)){
+                List<String> list = Arrays.asList(url.split(",")).stream().map(s-> "../"+s).collect(Collectors.toList());
+                questionVo.setUrlList(list);
+            }
+            return Result.success(questionVo);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -63,6 +90,50 @@ public class StudentController {
             }
         }catch (Exception e){
             e.printStackTrace();
+        }
+        return Result.fail();
+    }
+
+    @GetMapping("/student/answer/submit")
+    @ResponseBody
+    public Result submit(@RequestParam String questionId){
+        try {
+            studentService.saveAnswer(Long.valueOf(questionId));
+//            teacherService.saveQuestion();
+            return Result.success();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.fail();
+    }
+
+
+    @PostMapping("/student/answer/uploader")
+    @ResponseBody
+    public Result answerUploade(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        BufferedOutputStream out =  null;
+        try {
+            if (!file.isEmpty()) {
+                String saveFileName = System.currentTimeMillis()+file.getOriginalFilename();
+                String url = BASE_DIR + saveFileName;
+                File saveFile = new File(url);
+                out = new BufferedOutputStream(new FileOutputStream(saveFile));
+                out.write(file.getBytes());
+                out.flush();
+                out.close();
+                StudentInfo.put(LoginInfo.TEACHER_TOKEN.get(), saveFileName);
+                return Result.success(saveFileName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(out != null){
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return Result.fail();
     }
