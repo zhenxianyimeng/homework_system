@@ -16,6 +16,8 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String grade;
+
     private String name;
 
     private String password;
@@ -23,6 +25,14 @@ public class Student {
     private String email;
 
     private String token;
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
 
     public Long getId() {
         return id;
@@ -68,6 +78,7 @@ public class Student {
     public String toString() {
         return "Student{" +
                 "id=" + id +
+                ", grade='" + grade + '\'' +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +

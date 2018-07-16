@@ -8,10 +8,7 @@ import com.system.interceptor.StudentLogInterceptor;
 import com.system.vo.response.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +21,23 @@ import javax.servlet.http.HttpServletResponse;
 public class StudentController {
     @Autowired
     StudentService studentService;
+
+    @GetMapping("/student/check_token")
+    @ResponseBody
+    public Result checkToken(){
+        return Result.success();
+    }
+
+    @GetMapping("/student/ask/id")
+    @ResponseBody
+    public Result findCommitById(@RequestParam Long id){
+        try {
+            return Result.success(studentService.findCommitById(id));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.fail();
+    }
 
     @PostMapping("/user/student/login")
     @ResponseBody
@@ -47,6 +61,16 @@ public class StudentController {
                 response.addCookie(cookie);
                 return Result.success();
             }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.fail();
+    }
+
+    @GetMapping("/student/ask/list")
+    public Result listQuestion(){
+        try {
+            return Result.success(studentService.findAllTeacherCommit());
         }catch (Exception e){
             e.printStackTrace();
         }
