@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>在线作业管理系统教师端</title>
+    <title>在线作业管理系统学生端</title>
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
@@ -22,7 +22,6 @@
                         <el-submenu index="1">
                             <template slot="title">作业管理</template>
                             <el-menu-item index="1-1">作业列表</el-menu-item>
-                            <el-menu-item index="1-2">新增作业</el-menu-item>
                         </el-submenu>
                     </el-menu>
                 </el-col>
@@ -92,14 +91,14 @@
     (function () {
         $.ajax({
             type: 'GET',
-            url: "/teacher/check_token",
+            url: "/student/check_token",
 //            data: vm.condition,
             contentType: "application/x-www-form-urlencoded",
             success: function (data) {
             },
             error: function (xhr, textStatus, errorThrown) {
                 if (xhr.status == 401) {
-                    top.location.href = '/pages/teacher_login.html';
+                    top.location.href = '/pages/student_login.html';
                 }
             },
             dataType: "json"
@@ -133,9 +132,7 @@
             },
             handleSelect: function (idx) {
                 if (idx == "1-1") {
-                    $("#detail").attr("src", "ask_list.html");
-                } else if (idx == '1-2') {
-                    $("#detail").attr("src", "ask_add.html");
+                    $("#detail").attr("src", "answer_list.html");
                 }
             }
         }

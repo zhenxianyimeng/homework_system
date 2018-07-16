@@ -8,54 +8,84 @@ import java.io.Serializable;
  */
 public class SelectRequest implements Serializable {
     private static final long serialVersionUID = -2225420864532997925L;
-    private Integer typeValue;
+    private String typeValue;
 
-    private Integer courseValue;
+    private String courseValue;
 
-    private Integer gradeValue;
+    private String gradeValue;
 
-    private Integer chapterValue;
+    private String chapterValue;
 
-    private Integer sectionValue;
+    private String sectionValue;
 
-    public Integer getTypeValue() {
+    private Integer maxScore;
+
+    private String questionNum;
+
+    private String questionTitle;
+
+    public String getTypeValue() {
         return typeValue;
     }
 
-    public void setTypeValue(Integer typeValue) {
+    public void setTypeValue(String typeValue) {
         this.typeValue = typeValue;
     }
 
-    public Integer getCourseValue() {
+    public String getCourseValue() {
         return courseValue;
     }
 
-    public void setCourseValue(Integer courseValue) {
+    public void setCourseValue(String courseValue) {
         this.courseValue = courseValue;
     }
 
-    public Integer getGradeValue() {
+    public String getGradeValue() {
         return gradeValue;
     }
 
-    public void setGradeValue(Integer gradeValue) {
+    public void setGradeValue(String gradeValue) {
         this.gradeValue = gradeValue;
     }
 
-    public Integer getChapterValue() {
+    public String getChapterValue() {
         return chapterValue;
     }
 
-    public void setChapterValue(Integer chapterValue) {
+    public void setChapterValue(String chapterValue) {
         this.chapterValue = chapterValue;
     }
 
-    public Integer getSectionValue() {
+    public String getSectionValue() {
         return sectionValue;
     }
 
-    public void setSectionValue(Integer sectionValue) {
+    public void setSectionValue(String sectionValue) {
         this.sectionValue = sectionValue;
+    }
+
+    public Integer getMaxScore() {
+        return maxScore;
+    }
+
+    public void setMaxScore(Integer maxScore) {
+        this.maxScore = maxScore;
+    }
+
+    public String getQuestionNum() {
+        return questionNum;
+    }
+
+    public void setQuestionNum(String questionNum) {
+        this.questionNum = questionNum;
+    }
+
+    public String getQuestionTitle() {
+        return questionTitle;
+    }
+
+    public void setQuestionTitle(String questionTitle) {
+        this.questionTitle = questionTitle;
     }
 
     @Override
@@ -66,6 +96,9 @@ public class SelectRequest implements Serializable {
                 ", gradeValue=" + gradeValue +
                 ", chapterValue=" + chapterValue +
                 ", sectionValue=" + sectionValue +
+                ", maxScore=" + maxScore +
+                ", questionNum='" + questionNum + '\'' +
+                ", questionTitle='" + questionTitle + '\'' +
                 '}';
     }
 }

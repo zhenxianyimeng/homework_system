@@ -37,7 +37,7 @@ public class TeacherController {
     @Autowired
     SelectService selectService;
 
-    public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"upload";
+    public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"static/"+"upload";
 
     @GetMapping("/teacher/check_token")
     @ResponseBody
@@ -86,9 +86,22 @@ public class TeacherController {
     }
 
     @PostMapping("/teacher/ask/submit")
+    @ResponseBody
     public Result submit(@RequestBody SelectRequest request){
         try {
-            System.out.println(request);
+//            System.out.println(request);
+            teacherService.saveQuestion(request);
+            return Result.success();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.fail();
+    }
+
+    @GetMapping("/teacher/ask/list")
+    public Result listQuestion(){
+        try {
+            return Result.success(teacherService.findAllCommit());
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -13,7 +13,7 @@ import javax.persistence.Id;
 public class TeacherCommit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Integer total;
@@ -27,6 +27,30 @@ public class TeacherCommit {
     private String chapter;
 
     private String section;
+
+    private String questionNum;
+
+    private String questionTitle;
+
+    private Integer maxScore;
+
+    private String url;
+
+    public TeacherCommit() {
+    }
+
+    public TeacherCommit(Integer total, String type, String grade, String course, String chapter, String section, String questionTitle, Integer maxScore, String url, String questionNum) {
+        this.total = total;
+        this.type = type;
+        this.grade = grade;
+        this.course = course;
+        this.chapter = chapter;
+        this.section = section;
+        this.questionTitle = questionTitle;
+        this.maxScore = maxScore;
+        this.url = url;
+        this.questionNum = questionNum;
+    }
 
     public Long getId() {
         return id;
@@ -84,6 +108,38 @@ public class TeacherCommit {
         this.section = section;
     }
 
+    public String getQuestionTitle() {
+        return questionTitle;
+    }
+
+    public void setQuestionTitle(String questionTitle) {
+        this.questionTitle = questionTitle;
+    }
+
+    public Integer getMaxScore() {
+        return maxScore;
+    }
+
+    public void setMaxScore(Integer maxScore) {
+        this.maxScore = maxScore;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getQuestionNum() {
+        return questionNum;
+    }
+
+    public void setQuestionNum(String questionNum) {
+        this.questionNum = questionNum;
+    }
+
     @Override
     public String toString() {
         return "TeacherCommit{" +
@@ -94,6 +150,10 @@ public class TeacherCommit {
                 ", course='" + course + '\'' +
                 ", chapter='" + chapter + '\'' +
                 ", section='" + section + '\'' +
+                ", questionNum='" + questionNum + '\'' +
+                ", questionTitle='" + questionTitle + '\'' +
+                ", maxScore=" + maxScore +
+                ", url='" + url + '\'' +
                 '}';
     }
 }

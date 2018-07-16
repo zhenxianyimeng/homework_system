@@ -17,9 +17,9 @@
             <el-select v-model="type_value" placeholder="类型">
                 <el-option
                         v-for="item in select_info.typeList"
-                        :key="item.id"
+                        :key="item.type"
                         :label="item.type"
-                        :value="item.id">
+                        :value="item.type">
                 </el-option>
             </el-select>
         </el-form-item>
@@ -27,9 +27,9 @@
             <el-select v-model="grade_value" placeholder="年级">
                 <el-option
                         v-for="item in select_info.gradeList"
-                        :key="item.id"
+                        :key="item.grade"
                         :label="item.grade"
-                        :value="item.id">
+                        :value="item.grade">
                 </el-option>
             </el-select>
         </el-form-item>
@@ -37,9 +37,9 @@
             <el-select v-model="course_value" placeholder="课程">
                 <el-option
                         v-for="item in select_info.courseList"
-                        :key="item.id"
+                        :key="item.course"
                         :label="item.course"
-                        :value="item.id">
+                        :value="item.course">
                 </el-option>
             </el-select>
         </el-form-item>
@@ -47,9 +47,9 @@
             <el-select v-model="chapter_value" placeholder="章">
                 <el-option
                         v-for="item in select_info.chapterList"
-                        :key="item.id"
+                        :key="item.chapter"
                         :label="item.chapter"
-                        :value="item.id">
+                        :value="item.chapter">
                 </el-option>
             </el-select>
         </el-form-item>
@@ -57,12 +57,22 @@
             <el-select v-model="section_value" placeholder="节">
                 <el-option
                         v-for="item in select_info.sectionList"
-                        :key="item.id"
+                        :key="item.section"
                         :label="item.section"
-                        :value="item.id">
+                        :value="item.section">
                 </el-option>
             </el-select>
         </el-form-item>
+        <el-form-item label="满分分数">
+            <el-input v-model="form.maxScore" style="width: 15%;"></el-input>
+        </el-form-item>
+        <el-form-item label="题号">
+            <el-input v-model="form.questionNum" style="width: 15%;"></el-input>
+        </el-form-item>
+        <el-form-item label="作业名称">
+            <el-input v-model="form.questionTitle"></el-input>
+        </el-form-item>
+
         <el-form-item label="题目上传">
             <el-upload
                     class="upload-demo"
@@ -122,7 +132,7 @@
             url: "/teacher/ask/select_info",
             sync:false,
             success: function(data){
-                if(data.code = 200){
+                if(data.code == 0){
                     vm.select_info = data.data;
                 }
             },
@@ -144,12 +154,15 @@
                 gradeValue: vm.grade_value,
                 courseValue: vm.course_value,
                 chapterValue: vm.chapter_value,
-                sectionValue: vm.section_value
+                sectionValue: vm.section_value,
+                maxScore: vm.form.maxScore,
+                questionNum: vm.form.questionNum,
+                questionTitle: vm.form.questionTitle
             }),
             contentType : 'application/json',
             dataType:'json',
             success: function(data){
-                if(data.code = 200){
+                if(data.code == 0){
                     alert("上传题目成功")
                 }
             },
@@ -166,7 +179,7 @@
         data: function() {
             return {
                 fileList: [],
-                select_info:{"typeList":[{"id":1, "type":"11"}]},
+                select_info:{},
                 type_value:'',
                 grade_value:'',
                 course_value:'',
