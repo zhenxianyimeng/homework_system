@@ -13,6 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -31,12 +32,23 @@ public class TeacherService {
     @Autowired
     private AnswerRepository answerRepository;
 
+    @Transactional
+    public void saveScore(Long answerId, Double score){
+        Answer answer = answerRepository.findFirstByIdEquals(answerId);
+        answer.setScore(score);
+        answerRepository.save(answer);
+    }
+
     public void saveTeacher(Teacher teacher){
         teacherRepository.save(teacher);
     }
 
     public List<Answer> findAnswerByQuestionId(Long questionId){
         return answerRepository.findAllByQuestionIdEquals(questionId);
+    }
+
+    public Answer findAnswerById(Long answerId){
+        return answerRepository.findFirstByIdEquals(answerId);
     }
 
     public Teacher findByNameAndPwd(String name, String password){

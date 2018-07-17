@@ -9,4 +9,5 @@ import org.springframework.data.repository.Repository;
  * @date 2018/7/14.
  */
 public interface QuestionRepository extends JpaRepository<Question, Long> {
+
 }

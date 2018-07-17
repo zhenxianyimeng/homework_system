@@ -6,6 +6,7 @@ import com.system.common.info.LoginInfo;
 import com.system.common.info.TeacherInfo;
 import com.system.entity.Answer;
 import com.system.entity.Student;
+import com.system.entity.TeacherCommit;
 import com.system.interceptor.StudentLogInterceptor;
 import com.system.service.SelectService;
 import com.system.service.StudentService;
@@ -53,8 +54,41 @@ public class TeacherController {
 
     public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"static/";
 
+    @PostMapping("/teacher/answer/score")
+    public Result saveScore(@RequestParam String answerId, @RequestParam Double score){
+        try {
+            teacherService.saveScore(Long.valueOf(answerId), score);
+            return Result.success();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.fail();
+    }
+
+    @GetMapping("/teacher/answer/answerId")
+    public Result findAnswerByAnswerId(@RequestParam String answerId){
+        try {
+            Answer answer = teacherService.findAnswerById(Long.valueOf(answerId));
+            AnswerVo answerVo = new AnswerVo();
+            BeanUtils.copyProperties(answer, answerVo);
+            String url = answer.getUrl();
+            if(!StringUtils.isEmpty(url)){
+                List<String> urlList = Arrays.asList(url.split(",")).stream().map(s->"../"+s).collect(Collectors.toList());
+                answerVo.setUrlList(urlList);
+            }
+            answerVo.setStudentName(studentService.findNameById(answerVo.getStudentId()));
+            TeacherCommit commit = studentService.findCommitById(answerVo.getQuestionId());
+            answerVo.setQuestionTitle(commit.getQuestionTitle());
+            answerVo.setMaxScore(commit.getMaxScore());
+            return Result.success(answerVo);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.fail();
+    }
+
     @GetMapping("/teacher/answer")
-    public Result findAnswerById(@RequestParam String questionId){
+    public Result findAnswerByQuestionId(@RequestParam String questionId){
         try {
             List<Answer> list = teacherService.findAnswerByQuestionId(Long.valueOf(questionId));
             List<AnswerVo> reList = new LinkedList<>();
@@ -66,8 +100,8 @@ public class TeacherController {
                     if(!StringUtils.isEmpty(url)){
                         List<String> urlList = Arrays.asList(url.split(",")).stream().map(s->"../"+s).collect(Collectors.toList());
                         answerVo.setUrlList(urlList);
-                        answerVo.setStudentName(studentService.findNameById(answerVo.getStudentId()));
                     }
+                    answerVo.setStudentName(studentService.findNameById(answerVo.getStudentId()));
                     reList.add(answerVo);
                 }
             }

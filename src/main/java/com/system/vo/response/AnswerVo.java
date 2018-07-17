@@ -11,6 +11,8 @@ public class AnswerVo {
 
     private Long questionId;
 
+    private String questionTitle;
+
 //    private String url;
 
     private List<String> urlList;
@@ -20,6 +22,8 @@ public class AnswerVo {
     private String studentName;
 
     private Double score;
+
+    private Integer maxScore;
 
     private Integer status;
 
@@ -79,15 +83,34 @@ public class AnswerVo {
         this.status = status;
     }
 
+    public String getQuestionTitle() {
+        return questionTitle;
+    }
+
+    public void setQuestionTitle(String questionTitle) {
+        this.questionTitle = questionTitle;
+    }
+
+
+    public Integer getMaxScore() {
+        return maxScore;
+    }
+
+    public void setMaxScore(Integer maxScore) {
+        this.maxScore = maxScore;
+    }
+
     @Override
     public String toString() {
         return "AnswerVo{" +
                 "id=" + id +
                 ", questionId=" + questionId +
+                ", questionTitle='" + questionTitle + '\'' +
                 ", urlList=" + urlList +
                 ", studentId=" + studentId +
                 ", studentName='" + studentName + '\'' +
                 ", score=" + score +
+                ", maxScore=" + maxScore +
                 ", status=" + status +
                 '}';
     }

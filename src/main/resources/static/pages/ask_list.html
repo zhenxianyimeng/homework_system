@@ -114,6 +114,35 @@
             </el-table-column>
         </el-table>
     </el-dialog>
+
+    <el-dialog
+            title="批改作业"
+            :visible.sync="showCheck"
+            width="80%">
+        <el-form ref="form" :model="checkAnswer" label-width="80px">
+            <el-form-item label="问题题目">
+                <el-input type="textarea" :rows="1" v-model="checkAnswer.questionTitle"></el-input>
+            </el-form-item>
+            <el-form-item label="学生姓名">
+                <el-input type="textarea" :rows="1" v-model="checkAnswer.studentName" style="width: 20%;"></el-input>
+            </el-form-item>
+            <el-form-item label="学生ID">
+                <el-input type="textarea" :rows="1" v-model="checkAnswer.studentId" style="width: 20%;"></el-input>
+            </el-form-item>
+            <img v-for="url in checkAnswer.urlList" v-bind:src="url" class="image" style="width: 80%;"/>
+            <el-form-item label="满分分数">
+                <el-input type="textarea" :rows="1" v-model="checkAnswer.maxScore" style="width: 10%;"></el-input>
+            </el-form-item>
+            <el-form-item label="学生得分">
+                <el-input type="textarea" :rows="1" v-model="checkAnswer.score" style="width: 10%;"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="onSubmitScore">提交分数</el-button>
+                <!--<el-button>取消</el-button>-->
+            </el-form-item>
+        </el-form>
+
+    </el-dialog>
 </div>
 <style>
 </style>
@@ -139,7 +168,7 @@
         });
     })();
 
-    function getAnswerById(vm, id) {
+    function getAnswerByQuestionId(vm, id) {
         $.ajax({
             type: 'GET',
             url: "/teacher/answer?questionId="+id,
@@ -148,6 +177,49 @@
             success: function(data){
                 if(data.code == 0){
                     vm.answerList = data.data;
+                }
+            },
+            error : function(xhr,textStatus,errorThrown){
+                if (xhr.status == 401) {
+                    top.location.href = '/pages/teacher_login.html';
+                }
+            },
+            dataType: "json"
+        });
+    }
+
+    function getAnswerById(vm, id) {
+        $.ajax({
+            type: 'GET',
+            url: "/teacher/answer/answerId?answerId="+id,
+//            data: vm.condition,
+//             contentType:"application/x-www-form-urlencoded",
+            success: function(data){
+                if(data.code == 0){
+                    vm.checkAnswer = data.data;
+                }
+            },
+            error : function(xhr,textStatus,errorThrown){
+                if (xhr.status == 401) {
+                    top.location.href = '/pages/teacher_login.html';
+                }
+            },
+            dataType: "json"
+        });
+    }
+
+    function submitScore(vm) {
+        $.ajax({
+            type: 'POST',
+            url: "/teacher/answer/score",
+            data: {
+                "answerId":vm.checkAnswer.id,
+                "score":vm.checkAnswer.score
+            },
+            contentType:"application/x-www-form-urlencoded",
+            success: function(data){
+                if(data.code == 0){
+                    alert("设置分数成功");
                 }
             },
             error : function(xhr,textStatus,errorThrown){
@@ -186,7 +258,9 @@
                 questionList: [
                 ],
                 showAnswerList:false,
-                answerList:[]
+                showCheck:false,
+                answerList:[],
+                checkAnswer:{}
             }
         },
         mounted: function() {
@@ -197,14 +271,18 @@
 
             },
             handleAnswer: function(idx, row){
-                getAnswerById(this, row.id)
+                getAnswerByQuestionId(this, row.id)
                 this.showAnswerList = true;
             },
             handleDelete:function(idx, row){
 
             },
-            handleCheck: function(idx, row){
-
+            handleCheck:function(idx, row){
+                getAnswerById(this, row.id)
+                this.showCheck = true;
+            },
+            onSubmitScore: function(){
+                submitScore(this)
             },
             onSubmit : function () {
                 // 这里提交表单数据
