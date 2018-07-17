@@ -12,4 +12,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     Student findFirstByNameEqualsAndPasswordEquals(String name, String password);
 
     Student findFirstByTokenEquals(String token);
+
+    Student findFirstByIdEquals(Long id);
 }

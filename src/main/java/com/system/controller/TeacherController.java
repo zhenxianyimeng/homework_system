@@ -4,15 +4,21 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import com.system.common.info.LoginInfo;
 import com.system.common.info.TeacherInfo;
+import com.system.entity.Answer;
+import com.system.entity.Student;
 import com.system.interceptor.StudentLogInterceptor;
 import com.system.service.SelectService;
+import com.system.service.StudentService;
 import com.system.service.TeacherService;
 import com.system.entity.Teacher;
 import com.system.interceptor.TeacherLogInterceptor;
 import com.system.vo.request.SelectRequest;
+import com.system.vo.response.AnswerVo;
 import com.system.vo.response.Result;
 import com.system.vo.response.SelectVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +30,10 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author zjb
@@ -38,7 +48,35 @@ public class TeacherController {
     @Autowired
     SelectService selectService;
 
+    @Autowired
+    StudentService studentService;
+
     public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"static/";
+
+    @GetMapping("/teacher/answer")
+    public Result findAnswerById(@RequestParam String questionId){
+        try {
+            List<Answer> list = teacherService.findAnswerByQuestionId(Long.valueOf(questionId));
+            List<AnswerVo> reList = new LinkedList<>();
+            if(!CollectionUtils.isEmpty(list)){
+                for(Answer answer : list){
+                    AnswerVo answerVo = new AnswerVo();
+                    BeanUtils.copyProperties(answer, answerVo);
+                    String url = answer.getUrl();
+                    if(!StringUtils.isEmpty(url)){
+                        List<String> urlList = Arrays.asList(url.split(",")).stream().map(s->"../"+s).collect(Collectors.toList());
+                        answerVo.setUrlList(urlList);
+                        answerVo.setStudentName(studentService.findNameById(answerVo.getStudentId()));
+                    }
+                    reList.add(answerVo);
+                }
+            }
+            return Result.success(reList);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.fail();
+    }
 
     @GetMapping("/teacher/loginOut")
     public Result getIndex(HttpServletResponse httpServletResponse) {

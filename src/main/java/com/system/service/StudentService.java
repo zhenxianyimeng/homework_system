@@ -33,6 +33,10 @@ public class StudentService {
     @Autowired
     private TeacherCommitRepository teacherCommitRepository;
 
+    public String findNameById(Long id){
+        return studentRepository.findFirstByIdEquals(id).getName();
+    }
+
     public void saveStudent(Student student){
         studentRepository.save(student);
     }

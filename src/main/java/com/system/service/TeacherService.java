@@ -2,8 +2,10 @@ package com.system.service;
 
 import com.system.common.info.LoginInfo;
 import com.system.common.info.TeacherInfo;
+import com.system.entity.Answer;
 import com.system.entity.Teacher;
 import com.system.entity.TeacherCommit;
+import com.system.repository.AnswerRepository;
 import com.system.repository.TeacherCommitRepository;
 import com.system.repository.TeacherRepository;
 import com.system.vo.request.SelectRequest;
@@ -26,8 +28,15 @@ public class TeacherService {
     @Autowired
     private TeacherCommitRepository teacherCommitRepository;
 
+    @Autowired
+    private AnswerRepository answerRepository;
+
     public void saveTeacher(Teacher teacher){
         teacherRepository.save(teacher);
+    }
+
+    public List<Answer> findAnswerByQuestionId(Long questionId){
+        return answerRepository.findAllByQuestionIdEquals(questionId);
     }
 
     public Teacher findByNameAndPwd(String name, String password){
