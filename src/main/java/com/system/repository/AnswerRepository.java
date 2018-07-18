@@ -14,4 +14,6 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     List<Answer> findAllByQuestionIdEquals(Long questionId);
 
     Answer findFirstByIdEquals(Long answerId);
+
+    Answer findFirstByStudentIdEqualsAndQuestionIdEquals(Long studentId, Long questonId);
 }

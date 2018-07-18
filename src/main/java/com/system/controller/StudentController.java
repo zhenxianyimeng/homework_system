@@ -5,11 +5,13 @@ import com.google.common.hash.Hashing;
 import com.system.common.info.LoginInfo;
 import com.system.common.info.StudentInfo;
 import com.system.common.info.TeacherInfo;
+import com.system.entity.Answer;
 import com.system.entity.TeacherCommit;
 import com.system.service.StudentService;
 import com.system.entity.Student;
 import com.system.interceptor.StudentLogInterceptor;
 import com.system.vo.request.SelectRequest;
+import com.system.vo.response.AnswerVo;
 import com.system.vo.response.QuestionVo;
 import com.system.vo.response.Result;
 import org.springframework.beans.BeanUtils;
@@ -39,6 +41,28 @@ public class StudentController {
     StudentService studentService;
 
     public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"static/";
+
+    @GetMapping("/student/answer/questionId")
+    public Result getAnswerByQuestionId(@RequestParam String questionId){
+        try {
+            Answer answer = studentService.findAnswerByQuestonId(Long.valueOf(questionId));
+            AnswerVo answerVo = new AnswerVo();
+            BeanUtils.copyProperties(answer, answerVo);
+            String url = answer.getUrl();
+            if(!StringUtils.isEmpty(url)){
+                List<String> urlList = Arrays.asList(url.split(",")).stream().map(s->"../"+s).collect(Collectors.toList());
+                answerVo.setUrlList(urlList);
+            }
+            answerVo.setStudentName(studentService.findNameById(answerVo.getStudentId()));
+            TeacherCommit commit = studentService.findCommitById(answerVo.getQuestionId());
+            answerVo.setQuestionTitle(commit.getQuestionTitle());
+            answerVo.setMaxScore(commit.getMaxScore());
+            return Result.success(answerVo);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.fail();
+    }
 
     @GetMapping("/student/loginOut")
     public Result getIndex(HttpServletResponse httpServletResponse) {

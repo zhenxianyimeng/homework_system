@@ -33,6 +33,11 @@ public class StudentService {
     @Autowired
     private TeacherCommitRepository teacherCommitRepository;
 
+    public Answer findAnswerByQuestonId(Long questionId){
+        Student student = studentRepository.findFirstByTokenEquals(LoginInfo.STUDENT_TOKEN.get());
+        return answerRepository.findFirstByStudentIdEqualsAndQuestionIdEquals(student.getId(), questionId);
+    }
+
     public String findNameById(Long id){
         return studentRepository.findFirstByIdEquals(id).getName();
     }
