@@ -4,10 +4,12 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import com.system.common.info.LoginInfo;
 import com.system.common.info.TeacherInfo;
+import com.system.common.utils.SendEmail;
 import com.system.entity.Answer;
 import com.system.entity.Student;
 import com.system.entity.TeacherCommit;
 import com.system.interceptor.StudentLogInterceptor;
+import com.system.repository.StudentRepository;
 import com.system.service.SelectService;
 import com.system.service.StudentService;
 import com.system.service.TeacherService;
@@ -51,6 +53,9 @@ public class TeacherController {
 
     @Autowired
     StudentService studentService;
+
+    @Autowired
+    StudentRepository studentRepository;
 
     public final String BASE_DIR = Thread.currentThread().getContextClassLoader().getResource("").getPath()+"static/";
 
@@ -178,6 +183,12 @@ public class TeacherController {
         try {
 //            System.out.println(request);
             teacherService.saveQuestion(request);
+            List<Student> list = studentRepository.findAllByGradeEquals(request.getGradeValue());
+            if(!CollectionUtils.isEmpty(list)){
+                for(Student student : list){
+                    SendEmail.send(student.getEmail(), SendEmail.getRandNum()+SendEmail.CONTEXT, SendEmail.TITLE);
+                }
+            }
             return Result.success();
         }catch (Exception e){
             e.printStackTrace();
