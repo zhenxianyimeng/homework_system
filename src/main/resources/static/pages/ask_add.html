@@ -9,9 +9,6 @@
 <body>
 <div id="app">
 
-
-
-
     <el-form ref="form" :model="form" label-width="80px" class="sub-form">
         <el-form-item label="选择类型">
             <el-select v-model="type_value" placeholder="类型">
@@ -63,38 +60,60 @@
                 </el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="满分分数">
-            <el-input v-model="form.maxScore" style="width: 15%;"></el-input>
+        <el-form-item label="总分分数">
+            <el-input v-model="form.totalScore" style="width: 15%;"></el-input>
         </el-form-item>
-        <el-form-item label="题号">
-            <el-input v-model="form.questionNum" style="width: 15%;"></el-input>
+        <el-form-item label="总题目">
+            <el-input v-model="form.totalNum" style="width: 15%;"></el-input>
         </el-form-item>
-        <el-form-item label="作业名称">
-            <el-input v-model="form.questionTitle"></el-input>
-        </el-form-item>
-
-        <el-form-item label="题目上传">
-            <el-upload
-                    class="upload-demo"
-                    action="/teacher/ask/uploader"
-                    :on-preview="handlePreview"
-                    :on-remove="handleRemove"
-                    :before-remove="beforeRemove"
-                    multiple
-                    :limit="5"
-                    :on-exceed="handleExceed"
-                    :file-list="fileList"
-                    :on-success="onSuccess">
-                <el-button size="small" type="primary">点击上传</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg文件，且不超过10M</div>
-            </el-upload>
-        </el-form-item>
-
         <el-form-item>
-            <el-button type="primary" @click="onSubmit">提交</el-button>
+            <el-button type="primary" @click="showUploader">上传题目</el-button>
             <el-button>取消</el-button>
         </el-form-item>
     </el-form>
+
+    <el-dialog
+            title="上传作业"
+            :visible.sync="showDialog"
+            width="60%">
+        <!--<div :model="totalNum" v-for="n in totalNum">-->
+            <el-form v-for="n in form.totalList" ref="form" :model="form" label-width="80px" class="sub-form">
+                <el-form-item label="满分分数">
+                    <el-input v-model="form.maxScore[n]" style="width: 15%;"></el-input>
+                </el-form-item>
+                <el-form-item label="题号">
+                    <el-input v-model="form.questionNum[n]" style="width: 15%;"></el-input>
+                </el-form-item>
+                <el-form-item label="作业名称">
+                    <el-input v-model="form.questionTitle[n]"></el-input>
+                </el-form-item>
+
+                <el-form-item label="题目上传">
+                    <el-upload
+                            class="upload-demo"
+                            action="/teacher/ask/uploader"
+                            :on-preview="handlePreview"
+                            :on-remove="handleRemove"
+                            :before-remove="beforeRemove"
+                            multiple
+                            :limit="5"
+                            :on-exceed="handleExceed"
+                            :file-list="fileList"
+                            :on-success="onSuccess">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传jpg/png/jpeg文件，且不超过10M</div>
+                    </el-upload>
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button type="primary" @click="onSubmit(n)">提交</el-button>
+                    <el-button>取消</el-button>
+                </el-form-item>
+            </el-form>
+        <!--</div>-->
+
+    </el-dialog>
+
 </div>
 <style>
     .sub-form {
@@ -145,7 +164,7 @@
         });
     }
 
-    function submitFile(vm) {
+    function submitFile(vm, n) {
         $.ajax({
             type: 'POST',
             url: "/teacher/ask/submit",
@@ -155,9 +174,9 @@
                 courseValue: vm.course_value,
                 chapterValue: vm.chapter_value,
                 sectionValue: vm.section_value,
-                maxScore: vm.form.maxScore,
-                questionNum: vm.form.questionNum,
-                questionTitle: vm.form.questionTitle
+                maxScore: vm.form.maxScore[n],
+                questionNum: vm.form.questionNum[n],
+                questionTitle: vm.form.questionTitle[n]
             }),
             contentType : 'application/json',
             dataType:'json',
@@ -185,15 +204,31 @@
                 course_value:'',
                 chapter_value:'',
                 section_value:'',
-                form:{}
+                totalScore:'',
+                totalNum:0,
+                form:{
+                    totalList:[],
+                    maxScore:[],
+                    questionNum:[],
+                    questionTitle:[]
+                    // totalNum:0
+                },
+                showDialog:false
             };
         },
         mounted: function () {
             getSelectInfo(this)
         },
         methods: {
-            onSubmit(){
-                submitFile(this)
+            showUploader(){
+                var j = parseInt(this.form.totalNum)
+                for (var i = 0; i <j ; i++) {
+                    this.form.totalList.push(i);
+                }
+                this.showDialog = true;
+            },
+            onSubmit(n){
+                submitFile(this, n)
             },
             // beforeUpload(file) {
             //     var temp = new Date().getTime().toString().concat(file.name);
