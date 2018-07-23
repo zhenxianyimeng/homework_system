@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -65,6 +66,7 @@ public class TeacherService {
 
     public void saveQuestion(SelectRequest request){
         List<String> temp = TeacherInfo.imageInfos.get(LoginInfo.TEACHER_TOKEN.get());
+        TeacherInfo.imageInfos.put(LoginInfo.TEACHER_TOKEN.get(), new LinkedList<>());
         String url = "";
         if(CollectionUtils.isNotEmpty(temp)){
             url = String.join(",", temp);
