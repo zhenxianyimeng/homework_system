@@ -33,9 +33,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -202,6 +200,66 @@ public class TeacherController {
             return Result.success(teacherService.findAllCommit());
         }catch (Exception e){
             e.printStackTrace();
+        }
+        return Result.fail();
+    }
+
+    @GetMapping("/teacher/answer/cache_url")
+    @ResponseBody
+    public Result getCheckCache(){
+        try {
+            String tmp = TeacherInfo.tokenUrlMap.get(LoginInfo.TEACHER_TOKEN.get());
+            String url = tmp.split(",")[1];
+            Long answerId = Long.valueOf(tmp.split(",")[0]);
+            Map<String, Object> map = new HashMap<>();
+            map.put("url", url);
+            map.put("answerId", answerId);
+            return Result.success(map);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.fail();
+    }
+
+    @PostMapping("/teacher/answer/save_check")
+    @ResponseBody
+    public Result saveCheckInfo(Long answerId, String url){
+        try {
+            TeacherInfo.tokenUrlMap.put(LoginInfo.TEACHER_TOKEN.get(), answerId+","+url);
+            System.out.println(TeacherInfo.tokenUrlMap.get(LoginInfo.TEACHER_TOKEN.get()));
+            return Result.success();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Result.fail();
+    }
+
+    @PostMapping("/teacher/answer/check_uploader")
+    @ResponseBody
+    public Result checkUploade(@RequestParam("file") MultipartFile file, @RequestParam("answerId") Long  answerId,HttpServletRequest request) {
+        BufferedOutputStream out =  null;
+        try {
+            if (!file.isEmpty()) {
+                String saveFileName = "check" + System.currentTimeMillis()+file.getOriginalFilename();
+                String url = BASE_DIR + saveFileName;
+                File saveFile = new File(url);
+                out = new BufferedOutputStream(new FileOutputStream(saveFile));
+                out.write(file.getBytes());
+                out.flush();
+                out.close();
+                TeacherInfo.put(LoginInfo.TEACHER_TOKEN.get(), saveFileName);
+                return Result.success(saveFileName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(out != null){
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return Result.fail();
     }

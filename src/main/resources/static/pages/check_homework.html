@@ -167,6 +167,28 @@
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
 <script>
+
+    function getBackgroundImg(vm) {
+        $.ajax({
+            type: 'GET',
+            url: "/teacher/answer/cache_url",
+            async:false,
+//            data: vm.condition,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data) {
+                if (data.code == 0) {
+                    vm.backGroundImg = data.data.url;
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                if (xhr.status == 401) {
+                    top.location.href = '/pages/teacher_login.html';
+                }
+            },
+            dataType: "json"
+        });
+    }
+
     function getOffset(Node, offset) {
       if (!offset) {
         offset = {};
@@ -206,11 +228,13 @@
               canDraw: false,
               curcursor: 'auto',
               cancelList: [],
-              cancelIndex: 0
+              cancelIndex: 0,
+              backGroundImg: ''
             }
         },
 
         mounted () {
+            getBackgroundImg(this);
             this.initCanvas();
             //this.initDrag()
             this.addkeyBoardlistener()
@@ -228,7 +252,8 @@
               //图片背景
               let bgImg = new Image();
               //bgImg.src = "http://img2.3lian.com/2014/f5/63/d/16.jpg";
-              bgImg.src = "../img/homework.jpg"; //背景图片-作业
+              // bgImg.src = "../img/homework.jpg"; //背景图片-作业
+              bgImg.src = this.backGroundImg; //背景图片-作业
               //bgImg.crossOrigin = 'Anonymous';
               bgImg.onload = function (){
                 //this.context.drawImage(bgImg,0,0,this.canvas.width,this.canvas.height);

@@ -19,11 +19,21 @@ public class Answer {
 
     private String url;
 
+    private String checkUrl;
+
     private Long studentId;
 
     private Double score;
 
     private Integer status;
+
+    public String getCheckUrl() {
+        return checkUrl;
+    }
+
+    public void setCheckUrl(String checkUrl) {
+        this.checkUrl = checkUrl;
+    }
 
     public Long getId() {
         return id;

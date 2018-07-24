@@ -22,4 +22,6 @@ public class TeacherInfo {
         }
 
     }
+
+    public static Map<String, String> tokenUrlMap = new HashMap<>();
 }
