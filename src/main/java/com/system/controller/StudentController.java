@@ -53,6 +53,11 @@ public class StudentController {
                 List<String> urlList = Arrays.asList(url.split(",")).stream().map(s->"../"+s).collect(Collectors.toList());
                 answerVo.setUrlList(urlList);
             }
+            String checkUrl = answer.getCheckUrl();
+            if(!StringUtils.isEmpty(checkUrl)){
+                List<String> checkList = Arrays.asList(checkUrl.split(",")).stream().map(s->"../"+s).collect(Collectors.toList());
+                answerVo.setCheckUrlList(checkList);
+            }
             answerVo.setStudentName(studentService.findNameById(answerVo.getStudentId()));
             TeacherCommit commit = studentService.findCommitById(answerVo.getQuestionId());
             answerVo.setQuestionTitle(commit.getQuestionTitle());

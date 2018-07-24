@@ -17,6 +17,8 @@ public class AnswerVo {
 
     private List<String> urlList;
 
+    private List<String> checkUrlList;
+
     private Long studentId;
 
     private String studentName;
@@ -26,6 +28,14 @@ public class AnswerVo {
     private Integer maxScore;
 
     private Integer status;
+
+    public List<String> getCheckUrlList() {
+        return checkUrlList;
+    }
+
+    public void setCheckUrlList(List<String> checkUrlList) {
+        this.checkUrlList = checkUrlList;
+    }
 
     public String getStudentName() {
         return studentName;
@@ -107,6 +117,7 @@ public class AnswerVo {
                 ", questionId=" + questionId +
                 ", questionTitle='" + questionTitle + '\'' +
                 ", urlList=" + urlList +
+                ", checkUrlList=" + checkUrlList +
                 ", studentId=" + studentId +
                 ", studentName='" + studentName + '\'' +
                 ", score=" + score +

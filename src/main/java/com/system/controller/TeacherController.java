@@ -25,14 +25,12 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -236,19 +234,23 @@ public class TeacherController {
 
     @PostMapping("/teacher/answer/check_uploader")
     @ResponseBody
-    public Result checkUploade(@RequestParam("file") MultipartFile file, @RequestParam("answerId") Long  answerId,HttpServletRequest request) {
+    public Result checkUploade(@RequestParam("file") String file, String fileName, @RequestParam("answerId") Long  answerId,HttpServletRequest request) {
         BufferedOutputStream out =  null;
         try {
             if (!file.isEmpty()) {
-                String saveFileName = "check" + System.currentTimeMillis()+file.getOriginalFilename();
+                file = file.split(",")[1];
+                fileName = fileName.replace("../","");
+                String saveFileName = "check" + fileName;
                 String url = BASE_DIR + saveFileName;
-                File saveFile = new File(url);
-                out = new BufferedOutputStream(new FileOutputStream(saveFile));
-                out.write(file.getBytes());
-                out.flush();
-                out.close();
-                TeacherInfo.put(LoginInfo.TEACHER_TOKEN.get(), saveFileName);
-                return Result.success(saveFileName);
+                generateImage(file, url);
+//                File saveFile = new File(url);
+//                out = new BufferedOutputStream(new FileOutputStream(saveFile));
+//                out.write(file.getBytes());
+//                out.flush();
+//                out.close();
+//                TeacherInfo.put(LoginInfo.TEACHER_TOKEN.get(), saveFileName);
+                teacherService.saveCheckAnswer(answerId, saveFileName);
+                return Result.success();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -292,5 +294,35 @@ public class TeacherController {
             }
         }
         return Result.fail();
+    }
+
+    private static boolean generateImage(String imgStr, String fileName)
+    {   //对字节数组字符串进行Base64解码并生成图片
+        if (imgStr == null) //图像数据为空
+            return false;
+        BASE64Decoder decoder = new BASE64Decoder();
+        try
+        {
+            //Base64解码
+            byte[] b = decoder.decodeBuffer(imgStr);
+            for(int i=0;i<b.length;++i)
+            {
+                if(b[i]<0)
+                {//调整异常数据
+                    b[i]+=256;
+                }
+            }
+            //生成jpeg图片
+            String imgFilePath = fileName;//新生成的图片
+            OutputStream out = new FileOutputStream(imgFilePath);
+            out.write(b);
+            out.flush();
+            out.close();
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
     }
 }

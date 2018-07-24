@@ -1,8 +1,10 @@
 package com.system.service;
 
 import com.system.common.info.LoginInfo;
+import com.system.common.info.StudentInfo;
 import com.system.common.info.TeacherInfo;
 import com.system.entity.Answer;
+import com.system.entity.Student;
 import com.system.entity.Teacher;
 import com.system.entity.TeacherCommit;
 import com.system.repository.AnswerRepository;
@@ -12,6 +14,7 @@ import com.system.vo.request.SelectRequest;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.LinkedList;
@@ -63,6 +66,32 @@ public class TeacherService {
     public Teacher findByToken(String token){
         return teacherRepository.findFirstByTokenEquals(token);
     }
+
+    public void saveCheckAnswer(Long answerId, String file){
+        Answer answer = answerRepository.findFirstByIdEquals(answerId);
+        if(StringUtils.isEmpty(answer.getCheckUrl())){
+            answer.setCheckUrl(file);
+        }else {
+            answer.setCheckUrl(answer.getCheckUrl()+","+file);
+        }
+        answerRepository.save(answer);
+    }
+//    public void saveAnswer(Long questionId){
+//        List<String> temp = StudentInfo.imageInfos.get(LoginInfo.TEACHER_TOKEN.get());
+//        String url = "";
+//        if(CollectionUtils.isNotEmpty(temp)){
+//            url = String.join(",", temp);
+//        }
+//        Student student = studentRepository.findFirstByTokenEquals(LoginInfo.STUDENT_TOKEN.get());
+//        Answer answer = new Answer();
+//        answer.setQuestionId(questionId);
+//        answer.setStudentId(student.getId());
+//        answer.setUrl(url);
+//        answer.setStatus(0);
+//        answerRepository.save(answer);
+//        //teacherCommitRepository.save(teacherCommit);
+//
+//    }
 
     public void saveQuestion(SelectRequest request){
         List<String> temp = TeacherInfo.imageInfos.get(LoginInfo.TEACHER_TOKEN.get());

@@ -178,6 +178,7 @@
             success: function (data) {
                 if (data.code == 0) {
                     vm.backGroundImg = data.data.url;
+                    vm.answerId = data.data.answerId;
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
@@ -229,7 +230,8 @@
               curcursor: 'auto',
               cancelList: [],
               cancelIndex: 0,
-              backGroundImg: ''
+              backGroundImg: '',
+                answerId:0
             }
         },
 
@@ -315,8 +317,31 @@
                 downloadImg.src = this.canvas.toDataURL();
                 downloadImg.onload = () => {
                     this.context_background.drawImage(downloadImg,0,0,downloadImg.width,downloadImg.height,0,0,this.canvasSize.width,this.canvasSize.height);
-                    this.$refs.download.href = this.canvas_background.toDataURL()
-                    this.$refs.download.click()
+                    // this.$refs.download.href = this.canvas_background.toDataURL()
+                    var base64Data  = this.canvas_background.toDataURL()
+                    alert(base64Data)
+                    $.ajax({
+                        type: 'POST',
+                        url: "/teacher/answer/check_uploader",
+                        data: {
+                            "file":base64Data,
+                            "fileName":this.backGroundImg,
+                            "answerId":this.answerId
+                        },
+                        contentType:"application/x-www-form-urlencoded",
+                        dataType:'json',
+                        success: function(data){
+                            if(data.code == 0){
+                                alert("上传批改成功")
+                            }
+                        },
+                        error : function(xhr,textStatus,errorThrown){
+                            if (xhr.status == 401) {
+                                top.location.href = '/pages/teacher_login.html';
+                            }
+                        }
+                    });
+                    // this.$refs.download.click()
                  }
             },
             //开始画图，先画在蒙版上，最后复制到画布上

@@ -89,6 +89,7 @@ public class Answer {
                 "id=" + id +
                 ", questionId=" + questionId +
                 ", url='" + url + '\'' +
+                ", checkUrl='" + checkUrl + '\'' +
                 ", studentId=" + studentId +
                 ", score=" + score +
                 ", status=" + status +
