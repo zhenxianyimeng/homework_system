@@ -77,7 +77,7 @@ public class SendEmail {
         }
         catch (MessagingException mex) {
             mex.printStackTrace();
-            throw new Exception();
+//            throw new Exception();
         }
     }
 

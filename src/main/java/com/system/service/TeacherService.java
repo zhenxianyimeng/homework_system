@@ -67,7 +67,7 @@ public class TeacherService {
         return teacherRepository.findFirstByTokenEquals(token);
     }
 
-    public void saveCheckAnswer(Long answerId, String file){
+    public void  saveCheckAnswer(Long answerId, String file){
         Answer answer = answerRepository.findFirstByIdEquals(answerId);
         if(StringUtils.isEmpty(answer.getCheckUrl())){
             answer.setCheckUrl(file);

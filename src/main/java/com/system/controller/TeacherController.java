@@ -182,7 +182,7 @@ public class TeacherController {
             List<Student> list = studentRepository.findAllByGradeEquals(request.getGradeValue());
             if(!CollectionUtils.isEmpty(list)){
                 for(Student student : list){
-                    SendEmail.send(student.getEmail(), SendEmail.getRandNum()+SendEmail.CONTEXT, SendEmail.TITLE);
+//                    SendEmail.send(student.getEmail(), SendEmail.getRandNum()+SendEmail.CONTEXT, SendEmail.TITLE);
                 }
             }
             return Result.success();
