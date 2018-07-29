@@ -25,6 +25,8 @@ public class Answer {
 
     private Double score;
 
+    private String assessment;
+
     private Integer status;
 
     public String getCheckUrl() {
@@ -83,6 +85,14 @@ public class Answer {
         this.status = status;
     }
 
+    public String getAssessment() {
+        return assessment;
+    }
+
+    public void setAssessment(String assessment) {
+        this.assessment = assessment;
+    }
+
     @Override
     public String toString() {
         return "Answer{" +
@@ -92,6 +102,7 @@ public class Answer {
                 ", checkUrl='" + checkUrl + '\'' +
                 ", studentId=" + studentId +
                 ", score=" + score +
+                ", assessment='" + assessment + '\'' +
                 ", status=" + status +
                 '}';
     }

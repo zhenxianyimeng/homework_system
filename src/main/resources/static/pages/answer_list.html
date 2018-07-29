@@ -120,9 +120,20 @@
             <img v-for="url in answer.checkUrlList" v-bind:src="url" class="image" width="100%"/>
 
             <!--<img v-bind:src="question.url" class="image"/>-->
-            <el-form-item label="得分">
-                <el-input type="textarea" :rows="1" v-model="answer.score" style="width: 10%;"></el-input>
-            </el-form-item>
+            <div> 得分
+                <span>
+                {{answer.score}}
+                </span>
+                <!--<span v-model="answer.score" :rows="1" style="width: 10%;"></span>-->
+                <!--<el-input type="textarea" :rows="1" v-model="answer.score" style="width: 10%;"></el-input>-->
+            </div>
+            <div> 教师点评
+                <span>
+                {{answer.assessment}}
+                </span>
+                <!--<span v-model="answer.score" :rows="1" style="width: 10%;"></span>-->
+                <!--<el-input type="textarea" :rows="1" v-model="answer.score" style="width: 10%;"></el-input>-->
+            </div>
         </el-form>
     </el-dialog>
 </div>

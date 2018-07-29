@@ -20,7 +20,11 @@
                     <span style="margin-left: 10px">选择颜色</span>
                 </el-button>
                 <a href="javascript:void(0);" ref="download" download="picture.png" v-show="false"></a>
-            </div>
+                <div class="mark">
+                    <label style="width: 40px;margin-left: 10px">点评</label>
+                    <el-input type="textarea" v-model="assessment" style="width: 100%;"></el-input>
+                </div>
+                </div>
         </div>
 
         <div class="content">
@@ -110,6 +114,12 @@
     .nav{
       display: inline-flex;
       align-items: center;
+    }
+    .mark{
+        display: flex;
+        align-items: center;
+        margin-left: 30px;
+        width: 300px;
     }
 
     .content{
@@ -214,6 +224,7 @@
                 width: window.screen.availWidth*0.9,
                 height: window.screen.availHeight
               },
+                assessment:'',
               canvasTop:null,
               canvasLeft:null,
               canvas: this.$refs.canvas,
@@ -232,6 +243,7 @@
               cancelIndex: 0,
               backGroundImg: '',
                 answerId:0
+
             }
         },
 
@@ -319,14 +331,15 @@
                     this.context_background.drawImage(downloadImg,0,0,downloadImg.width,downloadImg.height,0,0,this.canvasSize.width,this.canvasSize.height);
                     // this.$refs.download.href = this.canvas_background.toDataURL()
                     var base64Data  = this.canvas_background.toDataURL()
-                    alert(base64Data)
+                    // alert(base64Data)
                     $.ajax({
                         type: 'POST',
                         url: "/teacher/answer/check_uploader",
                         data: {
                             "file":base64Data,
                             "fileName":this.backGroundImg,
-                            "answerId":this.answerId
+                            "answerId":this.answerId,
+                            "assessment":this.assessment
                         },
                         contentType:"application/x-www-form-urlencoded",
                         dataType:'json',

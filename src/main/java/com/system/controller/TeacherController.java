@@ -234,7 +234,7 @@ public class TeacherController {
 
     @PostMapping("/teacher/answer/check_uploader")
     @ResponseBody
-    public Result checkUploade(@RequestParam("file") String file, String fileName, @RequestParam("answerId") Long  answerId,HttpServletRequest request) {
+    public Result checkUploade(@RequestParam("file") String file,String assessment ,String fileName, @RequestParam("answerId") Long  answerId,HttpServletRequest request) {
         BufferedOutputStream out =  null;
         try {
             if (!file.isEmpty()) {
@@ -249,7 +249,7 @@ public class TeacherController {
 //                out.flush();
 //                out.close();
 //                TeacherInfo.put(LoginInfo.TEACHER_TOKEN.get(), saveFileName);
-                teacherService.saveCheckAnswer(answerId, saveFileName);
+                teacherService.saveCheckAnswer(answerId, saveFileName, assessment);
                 return Result.success();
             }
         } catch (Exception e) {

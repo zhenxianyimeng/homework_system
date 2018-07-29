@@ -25,6 +25,8 @@ public class AnswerVo {
 
     private Double score;
 
+    private String assessment;
+
     private Integer maxScore;
 
     private Integer status;
@@ -110,6 +112,14 @@ public class AnswerVo {
         this.maxScore = maxScore;
     }
 
+    public String getAssessment() {
+        return assessment;
+    }
+
+    public void setAssessment(String assessment) {
+        this.assessment = assessment;
+    }
+
     @Override
     public String toString() {
         return "AnswerVo{" +
@@ -121,6 +131,7 @@ public class AnswerVo {
                 ", studentId=" + studentId +
                 ", studentName='" + studentName + '\'' +
                 ", score=" + score +
+                ", assessment='" + assessment + '\'' +
                 ", maxScore=" + maxScore +
                 ", status=" + status +
                 '}';
